@@ -3,7 +3,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { Observation, SavedReport } from "../types";
 
 export const analyzeBatchObservations = async (observations: Observation[]): Promise<SavedReport> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_API_KEY });
   const modelName = "gemini-3-pro-preview";
   
   const systemInstruction = `Actúa como un Auditor Interno Senior (CIA) de Pesquera Exalmar S.A.A.
