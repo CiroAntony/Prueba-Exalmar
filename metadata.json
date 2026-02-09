@@ -1,0 +1,8 @@
+{
+  "name": "Copy of Exalmar Auditoría AI - Generador de Hallazgos",
+  "description": "Una herramienta profesional para auditores senior que genera hallazgos y recomendaciones detalladas a partir de evidencia visual y descripciones, siguiendo estándares internacionales de auditoría (Condición, Criterio, Causa y Efecto).",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
