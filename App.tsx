@@ -173,6 +173,8 @@ const App: React.FC = () => {
           editingObs={editingObs} 
           onAdd={handleAddObservation} 
           onCancel={() => { setEditingObs(null); navigate('home'); }} 
+          onShowSummary={() => navigate('session_summary')}
+          sessionLength={state.currentSession.length}
         />
       )}
 

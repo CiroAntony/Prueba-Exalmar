@@ -2,7 +2,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { Observation, SavedReport } from "../types";
 
 export const analyzeBatchObservations = async (observations: Observation[]): Promise<SavedReport> => {
-  const ai = new GoogleGenAI({ import.meta.env.VITE_API_KEY });
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   const modelName = "gemini-3-flash-preview";
   
   const systemInstruction = `// META-INSTRUCCIONES DE CONTROL DE EJECUCIÓN Y COSTOS:
@@ -123,7 +123,7 @@ RESPUESTA: JSON formal con metadatos de cabecera realistas.`;
         }
       }
     });
-    
+
     const parsed = JSON.parse(response.text || "{}");
     return {
       ...parsed,

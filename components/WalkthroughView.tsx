@@ -1,15 +1,17 @@
 
 import React, { useState, useRef } from 'react';
-import { Camera, Image as ImageIcon, Trash2, Mic, CheckCircle2, X, Plus } from 'lucide-react';
+import { Camera, Image as ImageIcon, Trash2, Mic, CheckCircle2, X, Plus, FileSpreadsheet } from 'lucide-react';
 import { Observation } from '../types';
 
 interface WalkthroughViewProps {
   onAdd: (obs: Observation) => void;
   onCancel: () => void;
   editingObs: Observation | null;
+  onShowSummary: () => void;
+  sessionLength: number;
 }
 
-export const WalkthroughView: React.FC<WalkthroughViewProps> = ({ onAdd, onCancel, editingObs }) => {
+export const WalkthroughView: React.FC<WalkthroughViewProps> = ({ onAdd, onCancel, editingObs, onShowSummary, sessionLength }) => {
   const [current, setCurrent] = useState({
     images: editingObs?.images || [] as string[],
     description: editingObs?.description || ''
@@ -58,7 +60,19 @@ export const WalkthroughView: React.FC<WalkthroughViewProps> = ({ onAdd, onCance
       <div className="bg-white rounded-[4rem] shadow-2xl border border-slate-100 p-12">
         <div className="flex justify-between items-center mb-10">
           <h2 className="text-4xl font-black text-slate-900 tracking-tighter">{editingObs ? 'Editar Evidencia' : 'Capturar Evidencia'}</h2>
-          <button onClick={onCancel} className="p-3 bg-slate-50 rounded-2xl text-slate-400 hover:text-slate-900"><X className="w-7 h-7"/></button>
+          <div className="flex items-center gap-3">
+            {sessionLength > 0 && (
+              <button 
+                onClick={onShowSummary}
+                className="text-xs font-black text-blue-600 bg-blue-50/70 px-4 py-3.5 rounded-2xl hover:bg-blue-100 transition-all flex items-center gap-2 border border-blue-100/50"
+                title="Ver Resumen de Evidencias"
+              >
+                <FileSpreadsheet className="w-4 h-4" />
+                <span>RESUMEN ({sessionLength})</span>
+              </button>
+            )}
+            <button onClick={onCancel} className="p-3 bg-slate-50 rounded-2xl text-slate-400 hover:text-slate-900"><X className="w-7 h-7"/></button>
+          </div>
         </div>
 
         {/* Multi-Image Gallery */}
