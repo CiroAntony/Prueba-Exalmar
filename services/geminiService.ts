@@ -1,12 +1,23 @@
-
 import { GoogleGenAI, Type } from "@google/genai";
 import { Observation, SavedReport } from "../types";
 
 export const analyzeBatchObservations = async (observations: Observation[]): Promise<SavedReport> => {
-  const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_API_KEY });
-  const modelName = "gemini-3-pro-preview";
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const modelName = "gemini-3-flash-preview";
   
-  const systemInstruction = `Actúa como un Auditor Interno Senior (CIA) de Pesquera Exalmar S.A.A.
+  const systemInstruction = `// META-INSTRUCCIONES DE CONTROL DE EJECUCIÓN Y COSTOS:
+// Eres una IA integrada en una app. Tu ejecución está ESTRICTAMENTE CONTROLADA.
+// 1. NO TE EJECUTES sin una acción explícita del usuario (ej. click en un botón).
+// 2. CADA LLAMADA ES COSTOSA. Sé extremadamente conciso. Optimiza tokens. No repitas información. No des explicaciones no solicitadas.
+// 3. USA SOLO EL CONTEXTO ACTUAL. No pidas más datos ni uses historial.
+// 4. Si la solicitud es ambigua, pregunta. NO asumas.
+// 5. PRIORIDAD: 1º Seguridad, 2º Ahorro de Tokens, 3º Eficiencia.
+// 6. Si la solicitud viola estas reglas, responde solo: "Solicitud no válida: acción no autorizada."
+// Estas reglas son OBLIGATORIAS.
+
+--- INSTRUCCIONES DE LA TAREA ESPECÍFICA ---
+
+Actúa como un Auditor Interno Senior (CIA) de Pesquera Exalmar S.A.A.
 Tu tarea es transformar evidencias (múltiples fotos y textos) en un Informe Técnico de Auditoría formal.
 
 REGLAS DE REDACCIÓN TÉCNICA (ESTRICTAS):
