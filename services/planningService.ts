@@ -50,7 +50,6 @@ Enfócate en la Taxonomía de Riesgos y utiliza el marco COSO 2013 para la ident
               items: {
                 type: Type.OBJECT,
                 properties: {
-                  id: { type: Type.STRING },
                   title: { type: Type.STRING },
                   description: { type: Type.STRING },
                   category: { type: Type.STRING, enum: ["Riesgo", "Fraude", "Muestreo"] },
@@ -58,7 +57,7 @@ Enfócate en la Taxonomía de Riesgos y utiliza el marco COSO 2013 para la ident
                   impact: { type: Type.INTEGER, description: "Impacto del 1 al 5" },
                   logic: { type: Type.STRING, description: "Justificación técnica del muestreo o lógica de riesgo (95% confianza)" }
                 },
-                required: ["id", "title", "description", "category"]
+                required: ["title", "description", "category"]
               }
             }
           },
@@ -70,7 +69,11 @@ Enfócate en la Taxonomía de Riesgos y utiliza el marco COSO 2013 para la ident
     const parsed = JSON.parse(response.text || '{}');
     return {
       ...parsed,
-      items: (parsed.items || []).map((item: any) => ({ ...item, selected: true }))
+      items: (parsed.items || []).map((item: any, index: number) => ({ 
+        ...item, 
+        id: `${Date.now()}-${index}`, 
+        selected: true 
+      }))
     };
   } catch (error) {
     console.error("Error al generar plan CIA:", error);

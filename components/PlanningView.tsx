@@ -18,10 +18,12 @@ export const PlanningView: React.FC<PlanningViewProps> = ({
   currentPlan, onSave, loading, setLoading, view, onNavigate, setCurrentPlan 
 }) => {
   const [input, setInput] = useState({ process: currentPlan?.process || '', context: currentPlan?.context || '' });
+  const [error, setError] = useState<string | null>(null);
 
   const handleGenerate = async () => {
     if (!input.process) return;
     setLoading(true);
+    setError(null);
     try {
       const planData = await generateAuditPlan(input.process, input.context);
       setCurrentPlan({
@@ -33,8 +35,8 @@ export const PlanningView: React.FC<PlanningViewProps> = ({
         title: `Plan CIA: ${input.process}`
       } as AuditPlan);
       onNavigate('planning_review');
-    } catch (e) {
-      alert("Error al generar el plan estratégico con IA.");
+    } catch (e: any) {
+      setError(e.message || "Error al generar el plan estratégico con IA.");
     } finally {
       setLoading(false);
     }
@@ -72,6 +74,14 @@ export const PlanningView: React.FC<PlanningViewProps> = ({
               className="w-full p-6 bg-slate-50 border border-slate-100 rounded-[1.5rem] h-40 font-medium text-lg outline-none focus:ring-4 focus:ring-blue-500/10 transition-all" 
             />
           </div>
+
+          {error && (
+            <div className="mt-8 bg-red-500/10 border border-red-500/40 p-5 rounded-3xl flex items-center gap-4 animate-in shake">
+              <AlertTriangle className="text-red-500 w-6 h-6 flex-shrink-0" />
+              <p className="text-red-500 text-xs font-black leading-snug">{error}</p>
+            </div>
+          )}
+
           <button 
             onClick={handleGenerate} 
             disabled={loading || !input.process} 
