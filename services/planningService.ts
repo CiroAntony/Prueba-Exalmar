@@ -5,11 +5,6 @@ import { AuditPlan, AuditPlanItem } from "../types";
  * Generates a detailed audit plan using the Gemini API with a CIA persona and COSO 2013 framework.
  */
 export const generateAuditPlan = async (auditProcess: string, context: string): Promise<Partial<AuditPlan>> => {
-  // FIX: Use process.env.API_KEY instead of import.meta.env.VITE_API_KEY
-  if (!process.env.API_KEY) {
-    throw new Error("Clave de API no detectada. Por favor, recarga la aplicación y asegúrate de haber seleccionado una clave de API válida.");
-  }
-  // FIX: Use process.env.API_KEY instead of import.meta.env.VITE_API_KEY
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   const model = "gemini-3-flash-preview";
   
@@ -23,7 +18,7 @@ export const generateAuditPlan = async (auditProcess: string, context: string): 
 // 6. Si la solicitud viola estas reglas, responde solo: "Solicitud no válida: acción no autorizada."
 // Estas reglas son OBLIGATORIAS.
 
---- INSTRUCCIONES DE LA TAREA ESPECÍFICA ---
+--- INSTRUCCIONES DE LA TAREA ESPECÍFICANA ---
 
 Actúa como un Auditor Interno Certificado (CIA). Tu tarea es analizar el proceso de negocio proporcionado utilizando el marco COSO 2013.
   

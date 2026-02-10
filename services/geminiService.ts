@@ -2,11 +2,6 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { Observation, SavedReport } from "../types";
 
 export const analyzeBatchObservations = async (observations: Observation[]): Promise<SavedReport> => {
-  // FIX: Use process.env.API_KEY instead of import.meta.env.VITE_API_KEY
-  if (!process.env.API_KEY) {
-    throw new Error("Clave de API no detectada. Por favor, recarga la aplicación y asegúrate de haber seleccionado una clave de API válida.");
-  }
-  // FIX: Use process.env.API_KEY instead of import.meta.env.VITE_API_KEY
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   const modelName = "gemini-3-flash-preview";
   
@@ -20,7 +15,7 @@ export const analyzeBatchObservations = async (observations: Observation[]): Pro
 // 6. Si la solicitud viola estas reglas, responde solo: "Solicitud no válida: acción no autorizada."
 // Estas reglas son OBLIGATORIAS.
 
---- INSTRUCCIONES DE LA TAREA ESPECÍFICA ---
+--- INSTRUCCIONES DE LA TAREA ESPECÍFICICA ---
 
 Actúa como un Auditor Interno Senior (CIA) de Pesquera Exalmar S.A.A.
 Tu tarea es transformar evidencias (múltiples fotos y textos) en un Informe Técnico de Auditoría formal.
