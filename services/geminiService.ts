@@ -123,7 +123,7 @@ RESPUESTA: JSON formal con metadatos de cabecera realistas.`;
         }
       }
     });
-
+    
     const parsed = JSON.parse(response.text || "{}");
     return {
       ...parsed,
