@@ -37,7 +37,7 @@ Enfócate en la Taxonomía de Riesgos y utiliza el marco COSO 2013 para la ident
   try {
     const response = await ai.models.generateContent({
       model: model,
-      contents: prompt,
+      contents: { parts: [{ text: prompt }] },
       config: {
         systemInstruction: systemInstruction,
         responseMimeType: "application/json",
