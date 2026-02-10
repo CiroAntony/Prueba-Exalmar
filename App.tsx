@@ -11,7 +11,7 @@ import { HistoryView } from './components/HistoryView';
 import { DraftRedactorView } from './components/DraftRedactorView';
 import { AppState, Observation, SavedReport, User, AuditPlan } from './types';
 import { analyzeBatchObservations } from './services/geminiService';
-import { AlertCircle, ArrowLeft } from 'lucide-react';
+import { AlertCircle, ArrowLeft, KeyRound } from 'lucide-react';
 import { 
   getHistory, saveFullReport, saveDraftSession, getDraftSession, 
   deleteReport, saveUserSession, getUserSession, removeUserSession, 
@@ -29,9 +29,22 @@ const App: React.FC = () => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [editingObs, setEditingObs] = useState<Observation | null>(null);
 
+  const [apiKeyReady, setApiKeyReady] = useState(false);
+  const [appInitialized, setAppInitialized] = useState(false);
+
   useEffect(() => {
-    const savedUser = getUserSession();
-    if (savedUser) loadData(savedUser);
+    const initApp = async () => {
+      // @ts-ignore
+      if (window.aistudio && await window.aistudio.hasSelectedApiKey()) {
+        setApiKeyReady(true);
+        const savedUser = getUserSession();
+        if (savedUser) {
+          loadData(savedUser);
+        }
+      }
+      setAppInitialized(true);
+    };
+    initApp();
   }, []);
 
   const loadData = async (user: User | null) => {
@@ -44,10 +57,23 @@ const App: React.FC = () => {
       history, 
       planHistory, 
       currentSession: draft, 
-      view: user ? 'home' : prev.view,
+      view: user ? 'home' : 'login',
       loading: false,
       error: null
     }));
+  };
+
+  const handleSelectKey = async () => {
+    // @ts-ignore
+    if (window.aistudio) {
+      // @ts-ignore
+      await window.aistudio.openSelectKey();
+      setApiKeyReady(true);
+      const savedUser = getUserSession();
+      if (savedUser) {
+        loadData(savedUser);
+      }
+    }
   };
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -125,6 +151,37 @@ const App: React.FC = () => {
   };
 
   const navigate = (v: any) => setState(p => ({ ...p, view: v, error: null }));
+
+  if (!appInitialized) {
+    return <div className="min-h-screen bg-[#0F172A]"></div>;
+  }
+
+  if (!apiKeyReady) {
+    return (
+      <div className="min-h-screen bg-[#0F172A] flex flex-col items-center justify-center p-6 relative overflow-hidden">
+        <div className="absolute top-0 -left-40 w-80 h-80 bg-blue-600/20 rounded-full blur-[120px]"></div>
+        <div className="absolute bottom-0 -right-40 w-80 h-80 bg-blue-500/10 rounded-full blur-[120px]"></div>
+        <div className="w-full max-w-md animate-in fade-in zoom-in duration-700 relative z-10 text-center">
+            <div className="bg-gradient-to-br from-blue-500 to-blue-700 w-24 h-24 rounded-[2rem] mx-auto flex items-center justify-center mb-8 shadow-2xl shadow-blue-500/40">
+                <KeyRound className="text-white w-12 h-12" />
+            </div>
+            <h1 className="text-3xl font-black text-white tracking-tighter mb-4">Configuración Requerida</h1>
+            <p className="text-blue-400/60 font-medium mb-8 max-w-sm mx-auto">
+                Esta aplicación utiliza la API de Google Gemini. Por favor, selecciona una clave de API de un proyecto con facturación habilitada para continuar.
+            </p>
+            <button
+                onClick={handleSelectKey}
+                className="w-full py-5 bg-blue-600 hover:bg-blue-500 text-white rounded-[1.8rem] font-black text-xl transition-all flex items-center justify-center gap-4 shadow-2xl shadow-blue-500/25 active:scale-95"
+            >
+                Seleccionar Clave de API
+            </button>
+             <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" className="text-slate-500 text-xs font-medium hover:text-white transition-colors mt-6 block">
+                Más información sobre la facturación de la API
+            </a>
+        </div>
+      </div>
+    );
+  }
 
   if (state.view === 'login') return (
     <LoginView 

@@ -2,7 +2,12 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { Observation, SavedReport } from "../types";
 
 export const analyzeBatchObservations = async (observations: Observation[]): Promise<SavedReport> => {
-  const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_API_KEY });
+  // FIX: Use process.env.API_KEY instead of import.meta.env.VITE_API_KEY
+  if (!process.env.API_KEY) {
+    throw new Error("Clave de API no detectada. Por favor, recarga la aplicación y asegúrate de haber seleccionado una clave de API válida.");
+  }
+  // FIX: Use process.env.API_KEY instead of import.meta.env.VITE_API_KEY
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   const modelName = "gemini-3-flash-preview";
   
   const systemInstruction = `// META-INSTRUCCIONES DE CONTROL DE EJECUCIÓN Y COSTOS:
